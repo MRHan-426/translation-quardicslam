@@ -1,5 +1,7 @@
 /* ----------------------------------------------------------------------------
 This is a C++ code that defines some functions for the DualConic class, which is a class for representing dual conics in the projective plane. Here is a summary of the functions:
+平面对偶锥曲线的生成。
+@ 核心函数：AlignedBox2 DualConic::smartBounds，实现了论文的计算式（4），即Figure2中的右图。@
 
 DualConic::DualConic():
   Default constructor that initializes the dual conic as a unit circle centered at the origin.
@@ -9,7 +11,6 @@ DualConic DualConic::normalize(void) const:
   Returns a new dual conic that is a normalized version of the current one.
 AlignedBox2 DualConic::bounds(gtsam::OptionalJacobian<4, 9> H) const:
   Returns the bounding box of the dual conic, which is an AlignedBox2 object that contains the minimum and maximum x and y coordinates of the conic. The function also optionally computes the Jacobian of the bounding box with respect to the parameters of the dual conic.
-核心函数：AlignedBox2 DualConic::smartBounds，实现了论文的计算式（4）
  * -------------------------------------------------------------------------- */
 
 /**
@@ -205,6 +206,7 @@ namespace gtsam_quadrics
                        (-C(1, 0) * 2 * xs[1] - C(2, 1) * 2) / (2 * C(1, 1)));
 
       // append extrema to set of points
+      // 方程组解出的四个交点
       points.push_back(p0);
       points.push_back(p1);
       points.push_back(p2);
@@ -215,6 +217,8 @@ namespace gtsam_quadrics
       throw e;
     }
 
+    // 然后需要判断上面解出的四个点是不是最优的（矩形框最小）
+    // 计算图像左右，上下边缘与对偶锥曲线的交点。
     // intersection of conic and line at X = 0
     try
     {
@@ -260,6 +264,7 @@ namespace gtsam_quadrics
     }
 
     // push back any captured image boundaries
+    // 函数检查给定图像的四个角点(左上、右上、左下、右下)是否在当前对偶锥曲线中。
     gtsam::Point2 i1(0.0, 0.0);
     gtsam::Point2 i2(0.0, imageHeight);
     gtsam::Point2 i3(imageWidth, 0.0);
@@ -284,6 +289,8 @@ namespace gtsam_quadrics
     // only accept non-imaginary points within image boundaries
     /// NOTE: it's important that contains includes points on the boundary
     /// ^ such that the fov intersect points count as valid
+    // 包含边界上的点很重要，因为这可以让视场(FOV)与图像边界的交点被视为有效。
+    // 检查上面计算出的点是否在给定的图像范围内。
     std::vector<gtsam::Point2> validPoints;
     for (auto point : points)
     {
@@ -292,7 +299,7 @@ namespace gtsam_quadrics
         validPoints.push_back(point);
       }
     }
-
+    // 如果找不到任何点，则会引发一个std::runtime_error异常，表示输入的圆锥曲线不可见。
     if (validPoints.size() < 1)
     {
       throw std::runtime_error(
@@ -302,6 +309,8 @@ namespace gtsam_quadrics
       // throw QuadricProjectionException("No valid conic points inside image
       // dimensions, implies quadric not visible");
     }
+
+    // 找到有效点后，计算出所有点中x和y坐标的最小和最大值。创建一个名为“smartBounds”的矩形框。
     auto minMaxX = std::minmax_element(
         validPoints.begin(), validPoints.end(),
         [](const gtsam::Point2 &lhs, const gtsam::Point2 &rhs)
@@ -314,7 +323,6 @@ namespace gtsam_quadrics
         {
           return lhs.y() < rhs.y();
         });
-
     // take the max/min of remaining points
     AlignedBox2 smartBounds(minMaxX.first->x(), minMaxY.first->y(),
                             minMaxX.second->x(), minMaxY.second->y());
