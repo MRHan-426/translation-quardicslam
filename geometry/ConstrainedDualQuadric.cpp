@@ -1,4 +1,6 @@
 /* ----------------------------------------------------------------------------
+@ 强制将二次曲线约束成椭球形 @
+
 这段代码实现了ConstrainedDualQuadric类的一些函数，该类表示受约束的对偶二次曲线。主要实现了以下几个函数：
 
 ConstrainedDualQuadric::ConstrainedDualQuadric()：
@@ -259,6 +261,10 @@ namespace gtsam_quadrics
   }
 
   /* ************************************************************************* */
+  // 接受一个 $9$ 维向量作为输入，对该类进行更新并返回更新后的结果。
+  // 首先，函数将输入向量的前 $6$ 个元素提取出来，调用 pose_ 对象的成员函数 retract 进行更新，得到更新后的 pose。
+  // 接下来，函数将输入向量的后 $3$ 个元素提取出来，与当前 radii_ 相加，得到更新后的 radii。
+  // 最后，函数构造并返回更新后的 ConstrainedDualQuadric 对象。
   ConstrainedDualQuadric ConstrainedDualQuadric::retract(
       const gtsam::Vector9 &v) const
   {
@@ -268,6 +274,10 @@ namespace gtsam_quadrics
   }
 
   /* ************************************************************************* */
+  // 这段代码实现了计算 受限对偶二次曲面 相对于另一个对象的本地坐标的功能。
+  // 具体来说，给定两个实例this和other，该方法返回一个gtsam::Vector9对象，
+  // 其中前6个元素是this.pose_相对于other.pose_的本地坐标，
+  // 后3个元素是other.radii_相对于this.radii_的差异。
   gtsam::Vector9 ConstrainedDualQuadric::localCoordinates(
       const ConstrainedDualQuadric &other) const
   {
@@ -292,6 +302,9 @@ namespace gtsam_quadrics
   }
 
   /* ************************************************************************* */
+  // 这段代码是将ConstrainedDualQuadric对象添加到GTSAM中的Values对象中，并使用给定的密钥k关联它们。
+  // 在GTSAM库中，Values类是一个关联了密钥和值的容器，它被用于管理优化变量和估计结果。
+  // 这个函数的目的是将ConstrainedDualQuadric对象添加到Values对象中，以便可以在GTSAM优化中使用它。
   void ConstrainedDualQuadric::addToValues(gtsam::Values &v,
                                            const gtsam::Key &k)
   {
@@ -299,6 +312,9 @@ namespace gtsam_quadrics
   }
 
   /* ************************************************************************* */
+  // 这段代码实现了从一个 gtsam::Values 对象中获取一个特定的 gtsam::Key 对应的 ConstrainedDualQuadric 对象。
+  // 其中 gtsam::Values 是一个类似于字典的对象，它将每个 gtsam::Key 映射到对应的值。
+  // 在这里，我们通过给定的 gtsam::Key，从 gtsam::Values 中获取对应的 ConstrainedDualQuadric 对象。
   ConstrainedDualQuadric ConstrainedDualQuadric::getFromValues(
       const gtsam::Values &v, const gtsam::Key &k)
   {
