@@ -1,11 +1,11 @@
 /* ----------------------------------------------------------------------------
 
- * QuadricSLAM Copyright 2020, ARC Centre of Excellence for Robotic Vision,
- Queensland University of Technology (QUT)
- * Brisbane, QLD 4000
- * All Rights Reserved
- * Authors: Lachlan Nicholson, et al. (see THANKS for the full author list)
- * See LICENSE for the license information
+QuadricCamera的类，该类表示一种能够投影二次曲面的相机。
+其中定义了三个公共成员函数：
+    transformToImage()、project()和project()。两个投影函数。
+    1.transformToImage()是一个静态函数，用于计算一个姿态和内参数为给定参数的投影矩阵。
+    2.project()函数用于将一个给定的三维二次曲面投影到存储的相机姿态和内参数所描述的二维图像平面上，并返回一个投影后的双圆锥体。
+    3.最后一个project()函数用于将一个给定的二维矩形框投影到三维空间中的平面上，并返回表示该平面的四维向量。
 
  * -------------------------------------------------------------------------- */
 

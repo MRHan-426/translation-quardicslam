@@ -1,11 +1,13 @@
 /* ----------------------------------------------------------------------------
+包含了一个类QuadricAngleFactor。
 
- * QuadricSLAM Copyright 2020, ARC Centre of Excellence for Robotic Vision,
- Queensland University of Technology (QUT)
- * Brisbane, QLD 4000
- * All Rights Reserved
- * Authors: Lachlan Nicholson, et al. (see THANKS for the full author list)
- * See LICENSE for the license information
+该类继承自gtsam::NoiseModelFactor1<ConstrainedDualQuadric>，
+
+@ 是一个能够计算Pose3和ConstrainedDualQuadric之间误差的因子。@
+
+该类包含了一些方法，如构造函数QuadricAngleFactor，evaluateError和print等。
+
+此外，类中还包含了一个measured_变量，用于存储测量得到的旋转矩阵。
 
  * -------------------------------------------------------------------------- */
 
