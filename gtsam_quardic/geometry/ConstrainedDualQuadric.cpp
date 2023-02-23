@@ -1,25 +1,25 @@
 /* ----------------------------------------------------------------------------
 @ 强制将二次曲线约束成椭球形 @
 
-这段代码实现了ConstrainedDualQuadric类的一些函数，该类表示受约束的对偶二次曲线。主要实现了以下几个函数：
+这段代码实现了ConstrainedDualQuadric类的一些函数，该类表示受约束的对偶二次曲面。主要实现了以下几个函数：
 
 ConstrainedDualQuadric::ConstrainedDualQuadric()：
-构造函数，将对偶二次曲线的位姿设为gtsam::Pose3()，将其轴长设为gtsam::Vector3(1,1,1)。
+构造函数，将对偶二次曲面的位姿设为gtsam::Pose3()，将其轴长设为gtsam::Vector3(1,1,1)。
 
 ConstrainedDualQuadric::ConstrainedDualQuadric(const gtsam::Matrix44& dQ)：
-构造函数，使用对偶二次曲线矩阵构造ConstrainedDualQuadric类对象。
+构造函数，使用对偶二次曲面矩阵构造ConstrainedDualQuadric类对象。
 
 ConstrainedDualQuadric ConstrainedDualQuadric::constrain(const gtsam::Matrix4& dual_quadric)：
-将无约束的对偶二次曲线矩阵变换成受约束的对偶二次曲线，即将其对应到某个射影矩阵。
+将无约束的对偶二次曲面矩阵变换成受约束的对偶二次曲面，即将其对应到某个射影矩阵。
 
 gtsam::Matrix44 ConstrainedDualQuadric::matrix(gtsam::OptionalJacobian<16, 9> dQ_dq) const：
-返回该对偶二次曲线的矩阵表示。如果计算dQ_dq，则返回dQ_dq，其中16x9的Jacobian矩阵是Q关于在Pose3和轴长上的导数。
+返回该对偶二次曲面的矩阵表示。如果计算dQ_dq，则返回dQ_dq，其中16x9的Jacobian矩阵是Q关于在Pose3和轴长上的导数。
 
 gtsam::Matrix44 ConstrainedDualQuadric::normalizedMatrix(void) const：
-返回该对偶二次曲线的归一化矩阵表示。
+返回该对偶二次曲面的归一化矩阵表示。
 
 AlignedBox3 ConstrainedDualQuadric::bounds() const：
-返回该对偶二次曲线的最小矩形边界框。
+返回该对偶二次曲面的最小矩形边界框。
  * -------------------------------------------------------------------------- */
 
 /**
@@ -43,7 +43,7 @@ namespace gtsam_quadrics
 {
 
   /* ************************************************************************* */
-  // 构造函数，将对偶二次曲线的位姿设为gtsam::Pose3()，将其轴长设为gtsam::Vector3(1,1,1)。
+  // 构造函数，将对偶二次曲面的位姿设为gtsam::Pose3()，将其轴长设为gtsam::Vector3(1,1,1)。
   ConstrainedDualQuadric::ConstrainedDualQuadric()
   {
     pose_ = gtsam::Pose3();

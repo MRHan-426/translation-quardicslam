@@ -1,6 +1,6 @@
 /* ----------------------------------------------------------------------------
 这段代码主要是实现了：
-  1.投影对偶二次曲线到图像的功能。
+  1.投影对偶二次曲面到图像的功能。
   2.将二维框投影到图像中并返回方程。
 
 QuadricCamera::transformToImage() 
@@ -46,13 +46,13 @@ namespace gtsam_quadrics
   /* ************************************************************************* */
   // 函数将一个 ConstrainedDualQuadric、一个三维姿态和一个内参矩阵作为输入，返回一个对偶锥曲线（DualConic）。
   // 表示三维 ConstrainedDualQuadric 投影到图像得到的平面图形 dualConic。
-  // 如果需要计算雅可比矩阵，可以得到 对偶锥曲线 对 对偶二次曲线 和对 输入姿态 的雅可比矩阵。
+  // 如果需要计算雅可比矩阵，可以得到 对偶锥曲线 对 对偶二次曲面 和对 输入姿态 的雅可比矩阵。
   DualConic QuadricCamera::project(
       const ConstrainedDualQuadric &quadric, const gtsam::Pose3 &pose,
       const boost::shared_ptr<gtsam::Cal3_S2> &calibration,
       gtsam::OptionalJacobian<9, 9> dC_dq, gtsam::OptionalJacobian<9, 6> dC_dx)
   {
-    // 先将对偶双曲线和三维姿态进行“退化”操作（retract）得到对偶二次曲线的变换矩阵 Q 和姿态的变换矩阵 Xi
+    // 先将对偶双曲线和三维姿态进行“退化”操作（retract）得到对偶二次曲面的变换矩阵 Q 和姿态的变换矩阵 Xi
     // first retract quadric and pose to compute dX:/dx and dQ:/dq
     gtsam::Matrix3 K = calibration->K();
     gtsam::Matrix4 Xi = pose.inverse().matrix();
@@ -66,7 +66,7 @@ namespace gtsam_quadrics
     gtsam::Matrix3 C = P * Q * P.transpose();
     DualConic dualConic(C);
 
-    // 如果需要计算雅可比矩阵，可以得到 对偶锥曲线(dualConic) 对 对偶二次曲线 的雅可比矩阵。
+    // 如果需要计算雅可比矩阵，可以得到 对偶锥曲线(dualConic) 对 对偶二次曲面 的雅可比矩阵。
     if (dC_dq)
     {
       Eigen::Matrix<double, 9, 16> dC_dQ = utils::kron(P, P);
