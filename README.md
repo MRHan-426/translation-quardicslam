@@ -1,4 +1,4 @@
-- ### Comments and basic analysis of quadricSLAM the Chinese.
+- ### Comments and basic analysis of quadricSLAM in Chinese.
 
 - ### quadricSLAM的中文注释和简单分析，仅作个人学习使用。
 
