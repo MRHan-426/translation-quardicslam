@@ -39,18 +39,33 @@ namespace gtsam_quadrics
   // 这个类的作用是为基于视觉的SLAM算法提供一个约束，以便估计物体在3D空间中的位置和相机的位姿。
   // 函数的输入包括了相机的姿态、表示物体的二次曲面、以及两个可选的矩阵参数H1和H2。
   // 其中，H1和H2分别表示误差函数对相机姿态和二次曲面的导数矩阵，用于后续的优化。
+  // Calculate the error between an object bbox on the camera image plane and a measured bbox.
+  // This class provides a constraint for vision-based SLAM to estimate the object's position in 3D space and the camera's pose.
+  // The function's inputs include: the camera pose, an object quadratic representation, and two optional matrices parameter H1 and H2.
+  // H1 and H2 represent the derivative matrices of the error function with respect to the camera pose and the quadratic respectively. 
+  // These matrices are used for subsequent optimization.
 
   // 在函数内部，首先对输入的相机姿态和二次曲面进行一些检查。
   // 如果二次曲面在相机后面或者相机在物体内部，就会抛出一个异常。
+  // In the function, the camera pose and quadratic surface inputs are first checked for validity.
+  // An exception is thrown if the quadratic is behind the camera or the camera is inside the object.
 
   // 然后，函数会通过调用QuadricCamera::project()函数将二次曲面投影到相机平面上，并计算相应的导数矩阵。
   // 如果开启了数值导数（NUMERICAL_DERIVATIVE），则会使用数值方法计算导数矩阵。
+  // Then, the function projects the quadratic onto the camera plane by calling QuadricCamera::project(),
+  // and calculates the corresponding derivative matrices.
+  // If NUMERICAL_DERIVATIVE is enabled, numerical methods will be used to calculate the derivative matrices.
 
   // 接着，函数会检查投影后的二次体是否是一个椭圆，并计算投影后椭圆的边界框及其导数矩阵。
+  // Next, the function checks if the projected quadratic is an ellipse and calculates the b-box and its derivative matrices.
 
   // 最后，函数会计算测量与预测边界框之间的误差，并根据需要计算误差函数对相机姿态和二次曲面的导数矩阵。
   // 如果误差函数或导数矩阵包含无穷大或NaN值，函数会抛出异常。
   // 如果投影出现了问题，函数会通过设置一个固定的误差向量和零导数矩阵来处理异常。
+  // Finally, the function calculates the error between the measured and predicted b-boxes and, 
+  // if required, the derivative matrices of the error function with respect to the camera pose and the quadratic surface.
+  // An exception is thrown if the error function or derivative matrices contain infinite or NaN values.
+  // If there are problems with the projection, the function will handle it by setting a fixed error vector and zero derivative matrices.
 
   // 最后，函数会返回误差向量。
   gtsam::Vector BoundingBoxFactor::evaluateError(
@@ -60,6 +75,8 @@ namespace gtsam_quadrics
   {
     // 在函数内部，首先对输入的相机姿态和二次曲面进行一些检查。
     // 如果二次曲面在相机后面或者相机在物体内部，就会抛出一个异常。
+    // In the function, the camera pose and quadratic surface inputs are first checked for validity.
+    // An exception is thrown if the quadratic is behind the camera or the camera is inside the object.
     try
     {
       // check pose-quadric pair
